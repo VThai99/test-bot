@@ -1,0 +1,161 @@
+{
+  "catfarm003": {
+    "email": "conghoang+cod2@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": true,
+    "gatherDragonPoint": true,
+    "nextCheckTime": "2025-04-10T04:30:57.278Z",
+    "nextAutoGatherTime": "2025-04-10T04:51:49.168Z",
+    "enable": false,
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["pan", "wood", 4],
+      ["tarra", "mana", 5]
+    ]
+  },
+  "catfarm004": {
+    "email": "conghoang+cod3@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": true,
+    "gatherDragonPoint": true,
+    "nextCheckTime": "2025-04-10T04:00:19.036Z",
+    "nextAutoGatherTime": "2025-04-10T03:48:54.315Z",
+    "enable": false,
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["kella", "wood", 1]
+    ]
+  },
+  "catfarm001": {
+    "email": "conghoang+cod1@gmail.com",
+    "gatherProdRss": true,
+    "gatherClanRss": true,
+    "gatherDragonPoint": true,
+    "nextCheckTime": "2025-04-10T04:24:28.439Z",
+    "nextAutoGatherTime": "2025-04-10T03:44:41.559Z",
+    "enable": false,
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["kella", "gold", 1],
+      ["pan", "wood", 4],
+      ["indis", "wood", 5]
+    ]
+  },
+  "catfarm002": {
+    "email": "conghoang+cod@gmail.com",
+    "enable": false,
+    "gatherProdRss": true,
+    "gatherClanRss": true,
+    "gatherDragonPoint": true,
+    "nextCheckTime": "",
+    "nextAutoGatherTime": "",
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["kella", "gold", 1],
+      ["pan", "wood", 4],
+      ["indis", "wood", 5]
+    ]
+  },
+  "FarmerProPlus": {
+    "name": "FarmerProPlus",
+    "email": "conghoang+cod@gmail.com",
+    "enable": false,
+    "gatherProdRss": true,
+    "gatherClanRss": true,
+    "gatherDragonPoint": true,
+    "nextCheckTime": "2025-04-10T03:47:28.840Z",
+    "nextAutoGatherTime": "2025-04-10T04:45:41.466Z",
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["kella", "gold", 1],
+      ["pan", "wood", 4],
+      ["indis", "wood", 5]
+    ]
+  },
+  "thanhdefarm3": {
+    "name": "thanhdefarm3",
+    "email": "wellcomw333@gmail.com",
+    "enable": true,
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "",
+    "nextAutoGatherTime": "",
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "gold", 2],
+      ["kella", "gold", 1],
+      ["pan", "wood", 4],
+      ["indis", "wood", 5]
+    ]
+  },
+  "BabyDuck09": {
+    "email": "chithanhtanhue@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-04-10T04:19:01.191Z",
+    "nextAutoGatherTime": "2025-04-10T04:19:01.193Z",
+    "enable": false,
+    "troops": [
+      ["chakcha", "ore", 13],
+      ["naernin", "gold", 12],
+      ["kella", "gold", 11],
+      ["pan", "wood", 14],
+      ["indis", "wood", 15]
+    ]
+  },
+  "BabyDuck10": {
+    "email": "idsieukhoe@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-04-10T04:26:45.568Z",
+    "nextAutoGatherTime": "2025-04-10T04:26:45.570Z",
+    "enable": false,
+    "troops": [
+      ["chakcha", "ore", 13],
+      ["naernin", "gold", 12],
+      ["kella", "gold", 11],
+      ["pan", "wood", 14],
+      ["indis", "wood", 15]
+    ]
+  },
+  "Bin001": {
+    "email": "codfarm1006@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-04-10T06:12:35.946Z",
+    "nextAutoGatherTime": "2025-04-10T06:23:00.757Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "ore", 2],
+      ["kella", "ore", 1],
+      ["pan", "ore", 4],
+      ["tarra", "ore", 5]
+    ]
+  },
+  "Bin002": {
+    "email": "codfarm1006@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-04-10T06:30:30.707Z",
+    "nextAutoGatherTime": "2025-04-10T06:30:30.709Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "ore", 3],
+      ["naernin", "ore", 2],
+      ["kella", "ore", 1],
+      ["pan", "ore", 4],
+      ["tarra", "ore", 5]
+    ]
+  }
+}
