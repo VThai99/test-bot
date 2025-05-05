@@ -8,6 +8,7 @@ import {
   sleepRandom,
   touchScreen,
   sleep,
+  ocrTextWithRect,
 } from "./utils";
 import { readFileSync, promises as fsPromises } from "fs";
 import console from "console";
@@ -813,6 +814,16 @@ const to = setTimeout(
   },
   40 * 60 * 1000,
 );
+async function testOcr() {
+  try {
+    const result = await ocrTextWithRect('./imgs/test.png');
+    console.log('OCR Result:', result);
+  } catch (error) {
+    console.error('Test failed:', error);
+  }
+}
+
+testOcr();
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
 await sleepRandom(DEFAULT_WAIT_TIME);

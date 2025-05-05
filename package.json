@@ -16,6 +16,7 @@
     "bun": "^1.2.10",
     "console": "^0.7.2",
     "fs": "^0.0.1-security",
+    "node-tesseract-ocr": "^2.2.1",
     "path": "^0.12.7",
     "sharp": "^0.34.1"
   }
