@@ -12,6 +12,7 @@ import {
 } from "./utils";
 import { readFileSync, promises as fsPromises } from "fs";
 import console from "console";
+import path from "path";
 
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
@@ -19,7 +20,7 @@ const exec = util.promisify(require("child_process").exec);
 const TOLERANCE = 65;
 const AVATAR_IMAGE_PATH = "./imgs/avatar1.png";
 const adbOptions = "-e";
-const DEFAULT_WAIT_TIME = 10000;
+const DEFAULT_WAIT_TIME = 15000;
 const DEFAULT_WAIT_TIME_LONG = 15000;
 const ADB_PATH = "D:\\LDPlayer\\LDPlayer9\\adb.exe";
 const LDPLAYER_PATH = "D:\\LDPlayer\\LDPlayer9\\ldconsole.exe";
@@ -172,11 +173,12 @@ async function waitForSubImage(imgPath: string, timeout: number) {
 let sendAlertsTimeout: ReturnType<typeof setTimeout> | null = null;
 let sendMessageBatch: string[] = [];
 async function sendDiscordMessage(message: string, err?: unknown) {
+  const chatId = '-1002059527633'
+  const botToken = '7286680375:AAFNEeer3L_qAW4du7Y00st1mJlNBth_ZqI'
   const payload = {
-    // the username to be displayed
-    username: "bot-alerts",
-    // contents of the message to be sent
-    content: message,
+    chat_id: chatId,
+    parse_mode: "HTML",
+    text: message,
     ...(err
       ? {
           embeds: [
@@ -193,7 +195,7 @@ async function sendDiscordMessage(message: string, err?: unknown) {
       : {}),
   };
   const res = await fetch(
-    "https://discord.com/api/webhooks/1359711711069868172/7AURmkEfFfZXSHl7lBjIMHjRzH-f9C2pAfdPYUmRlVKQz6MKwfM3gV2JYdDPSmRWDYLz",
+    `https://api.telegram.org/bot${botToken}/sendMessage`,
     {
       method: "post",
       headers: {
@@ -238,7 +240,7 @@ function waitForAvatarImage() {
 }
 
 async function startGame() {
-  // sendAlerts("start game", "app");
+  sendAlerts("start game", "app");
   await runADBCommand(
     adbOptions,
     "shell am start -n com.farlightgames.samo.gp.vn/com.harry.engine.MainActivity",
@@ -352,10 +354,11 @@ async function guessCurrentAccountFromScreen() {
     width: 1280,
     height: 720,
   });
+  console.log("allTexts", allTexts);
   if (
-    !allTexts.some((t) => t.text === "Settings") &&
-    !allTexts.some((t) => t.text === "Lord") &&
-    !allTexts.some((t) => t.text === "Rankings")
+    !allTexts.some((t) => t.text.includes('Power Merits')) &&
+    !allTexts.some((t) => t.text.includes('Lord')) &&
+    !allTexts.some((t) => t.text.includes('Achievements'))
   ) {
     sendAlerts(
       "guessCurrentAccountFromScreen something wrong when start app view, please check",
@@ -737,6 +740,7 @@ async function main() {
     process.exit(0);
   }
   const accountToRun = Object.keys(accounts).filter((key) => {
+    console.log("key", accounts[key]);
     return (
       accounts[key].enable &&
       accounts[key].nextCheckTime < new Date().toISOString()
@@ -816,14 +820,14 @@ const to = setTimeout(
 );
 async function testOcr() {
   try {
-    const result = await ocrTextWithRect('./imgs/test.png');
+    const result = await ocrTextWithRect(`${path.resolve(__dirname, "./tmp/1746612238135.tmp.png")}`);
     console.log('OCR Result:', result);
   } catch (error) {
     console.error('Test failed:', error);
   }
 }
-
-testOcr();
+// testOcr();
+// await waitForAvatarImage();
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
 await sleepRandom(DEFAULT_WAIT_TIME);
