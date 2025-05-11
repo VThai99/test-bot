@@ -15,7 +15,7 @@ export function sleep(ms: number): Promise<void> {
 
 export async function runADBCommand(options: string, command: string) {
   const adbPath = "D:\\LDPlayer\\LDPlayer9\\adb";
-  const fullCommand = `"${adbPath}" ${options} ${command}`;
+  const fullCommand = `"${adbPath}" -s 127.0.0.1:5555 ${options} ${command}`;
   return exec(fullCommand);
 }
 export const sleepRandom = async (ms: number) => {
@@ -24,117 +24,29 @@ export const sleepRandom = async (ms: number) => {
   });
 };
 
-// export const ocrTextWithRect = async (
-//   imgPath: string
-// ): Promise<
-//   {
-//     text: string;
-//     rect: { x: number; y: number; width: number; height: number };
-//   }[]
-// > => {
-//   const metadata = await sharp(imgPath).metadata();
-//   try {
-//     const res = await exec(
-//       `${path.resolve(
-//         __dirname,
-//         "./macos-vision-ocr-arm64 "
-//       )} --img "${imgPath}" --rec-langs "en-US"`
-//     );
-//     const imgWidth = metadata.width as number;
-//     const imgHeight = metadata.height as number;
-//     const text = JSON.parse(res.stdout);
-//     return text.observations.map(
-//       (t: {
-//         confidence: number;
-//         quad: {
-//           bottomLeft: { x: number; y: number };
-//           topRight: { x: number; y: number };
-//           bottomRight: { x: number; y: number };
-//           topLeft: { x: number; y: number };
-//         };
-//         text: string;
-//       }) => {
-//         return {
-//           text: t.text,
-//           rect: {
-//             x: Math.floor(t.quad.topLeft.x * imgWidth),
-//             y: Math.floor(t.quad.topLeft.y * imgHeight),
-//             width: Math.floor(
-//               (t.quad.bottomRight.x - t.quad.topLeft.x) * imgWidth
-//             ),
-//             height: Math.floor(
-//               (t.quad.bottomRight.y - t.quad.topLeft.y) * imgHeight
-//             ),
-//           },
-//         };
-//       }
-//     );
-//   } catch (e) {
-//     console.error(e);
-//   } finally {
-//   }
-//   return [];
-// };
-
-export const ocrTextWithRect = async (imgPath: string): Promise<any> => {
-  console.log("imgpath", imgPath);
-  const metadata = await sharp(imgPath).metadata();
-  console.log("metadata", metadata);
-  // const imgWidth = metadata.width as number;
-//     const imgHeight = metadata.height as number;
-  // const imageBuffer = await sharp(imgPath)
-  // .resize({ width: imgWidth * 2 })  // or height * 2
-  // .withMetadata({ density: 300 })
-  // .toBuffer();
+export const ocrTextWithRect = async (
+  imgPath: string
+): Promise<
+  {
+    text: string;
+    rect: { x: number; y: number; width: number; height: number };
+  }[]
+> => {
   try {
-    const { createWorker } = Tesseract;
-    const worker = await createWorker()
-    await worker.setParameters({
-      // tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      user_defined_dpi: '100',
-      tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK, // auto
-    });
-    const {
-      data
-    } = await worker.recognize(
-      imgPath,
-      {},
-      {
-        text: true,
-        blocks: true,
-        layoutBlocks: true,
-        hocr: false,
-        tsv: false,
-        box: false,
-        unlv: false,
-        osd: true,
-        pdf: false,
-        imageColor: false,
-        imageGrey: false,
-        imageBinary: false,
-        debug: false,
-      }
+    const res = await exec(
+      `py ${path.resolve(
+        __dirname,
+        "DetechTextByEasyOCR.py"
+      )} ${imgPath}`
     );
-    // console.log("data", JSON.stringify(data));
-    const { paragraphs } = data.blocks?.[0];
-    const { lines } = paragraphs[0];
-    return lines.map(line => {
-      const { text, bbox } = line;
-      const { x0, y0, x1, y1 } = bbox;
-      return {
-        text,
-        rect: {
-          x: x0,
-          y: y0,
-          width: x1 - x0,
-          height: y1 - y0,
-        },
-      };
-    })
+    const text = JSON.parse(res.stdout);
+    // console.log("ocrTextWithRect", text);
+    return text.items
   } catch (e) {
-    console.error("OCR Error:", e);
-    return [];
+    console.error(e);
+  } finally {
   }
+  return [];
 };
 
 export const captureScreen = async (adbOptions: string, outputFile: string) => {
@@ -176,20 +88,6 @@ export const ocrScreenArea = async (
     await captureScreen(adbOptions, tmpFile);
 
     await sleepRandom(1000);
-    // const metadata = await sharp(tmpFile).metadata();
-    // console.log(metadata.width, metadata.height);
-    // const clamp = (val, min, max) => Math.max(min, Math.min(val, max));
-
-    // const safeArea = {
-    //   left: clamp(area.x, 0, metadata.width - 1),
-    //   top: clamp(area.y, 0, metadata.height - 1),
-    //   width: clamp(area.width, 1, metadata.width - area.x),
-    //   height: clamp(area.height, 1, metadata.height - area.y),
-    // };
-    // await sharp(tmpFile)
-    // .extract(safeArea)
-    // .toFile(tmpFile1);
-    // extract area using sharp
     await sharp(tmpFile)
       .extract({
         left: area.x,

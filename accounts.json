@@ -1,71 +1,173 @@
 {
-  "catfarm003": {
-    "email": "conghoang+cod2@gmail.com",
+  "farmwithTee": {
+    "email": "vincentee1999@gmail.com",
+    "emailcheck": "vincentee1999@gmail.com",
     "gatherProdRss": false,
-    "gatherClanRss": true,
-    "gatherDragonPoint": true,
-    "nextCheckTime": "2025-04-10T04:30:57.278Z",
-    "nextAutoGatherTime": "2025-04-10T04:51:49.168Z",
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T12:47:04.211Z",
+    "nextAutoGatherTime": "2025-05-10T11:18:24.963Z",
     "enable": true,
     "troops": [
-      [
-        "chakcha",
-        "ore",
-        3
-      ],
-      [
-        "naernin",
-        "gold",
-        2
-      ],
-      [
-        "pan",
-        "wood",
-        4
-      ],
-      [
-        "tarra",
-        "mana",
-        5
-      ]
+      ["chakcha", "ore", 1],
+      ["naernin", "wood", 2],
+      ["pan", "wood", 3],
+      ["tarra", "ore", 4],
+      ["kella", "ore", 5]
+    ],
+    "stats": {
+      "gold": "13BAM",
+      "wood": "4676M",
+      "ore": "B47M",
+      "mana": "3.IM",
+      "gems": "20425"
+    }
+  },
+  "WoodTeeV3": {
+    "email": "emailcodtee+farm1@gmail.com",
+    "emailcheck": "emailcodteefarm1@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T12:47:04.211Z",
+    "nextAutoGatherTime": "2025-05-10T11:18:24.963Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "ore", 1],
+      ["tarra", "wood", 2],
+      ["kella", "ore", 3]
     ]
+  },
+  "StoneTeeV3": {
+    "email": "emailcodtee+farm2@gmail.com",
+    "emailcheck": "emailcodteefarm2@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T16:11:29.930Z",
+    "nextAutoGatherTime": "2025-05-10T20:11:38.343Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "ore", 1],
+      ["tarra", "ore", 2],
+      ["kella", "ore", 3]
+    ],
+    "stats": {
+      "gold": "9M",
+      "wood": "I89M",
+      "ore": "89M",
+      "mana": "L2M",
+      "gems": "1,066"
+    }
+  },
+  "WoodTeeV4": {
+    "email": "emailcodtee+farm3@gmail.com",
+    "emailcheck": "emailcodteefarm3@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T15:58:46.038Z",
+    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "wood", 1],
+      ["tarra", "ore", 2],
+      ["kella", "wood", 3]
+    ],
+    "stats": {
+      "gold": "9AM",
+      "wood": "203M",
+      "ore": "I24.7M",
+      "mana": "LSM",
+      "gems": "866"
+    }
   },
   "WoodTee": {
     "email": "emailcodtee@gmail.com",
+    "emailcheck": "emailcodtee@gmail.com",
     "gatherProdRss": false,
-    "gatherClanRss": true,
-    "gatherDragonPoint": true,
-    "nextCheckTime": "2025-05-08T09:00:39.057Z",
-    "nextAutoGatherTime": "2025-05-08T13:03:33.383Z",
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T15:58:46.038Z",
+    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
     "enable": true,
     "troops": [
-      [
-        "chakcha",
-        "ore",
-        3
-      ],
-      [
-        "naernin",
-        "gold",
-        2
-      ],
-      [
-        "pan",
-        "wood",
-        4
-      ],
-      [
-        "tarra",
-        "mana",
-        5
-      ]
+      ["chakcha", "wood", 1],
+      ["pan", "wood", 4],
+      ["kella", "wood", 3]
     ],
     "stats": {
-      "gold": "asm oem Tooami | foie UT 2,623,\n",
-      "wood": "",
-      "ore": "",
-      "mana": "",
-      "gems": ""
+      "gold": "9AM",
+      "wood": "203M",
+      "ore": "I24.7M",
+      "mana": "LSM",
+      "gems": "866"
+    }
+  },
+  "WoodTeev2": {
+    "email": "emailcodtee1@gmail.com",
+    "emailcheck": "emailcodtee1@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T15:58:46.038Z",
+    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "wood", 1],
+      ["pan", "wood", 4],
+      ["kella", "wood", 3]
+    ],
+    "stats": {
+      "gold": "9AM",
+      "wood": "203M",
+      "ore": "I24.7M",
+      "mana": "LSM",
+      "gems": "866"
+    }
+  },
+  "StoneTee": {
+    "email": "emailcodtee2@gmail.com",
+    "emailcheck": "emailcodtee2@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-11T12:17:22.787Z",
+    "nextAutoGatherTime": "2025-05-11T16:17:29.955Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "wood", 1],
+      ["pan", "wood", 4],
+      ["kella", "wood", 3]
+    ],
+    "stats": {
+      "gold": "I9M",
+      "wood": "I4AM",
+      "ore": "9M",
+      "mana": "L6M",
+      "gems": "4,217"
+    }
+  },
+  "StoneTeeV2": {
+    "email": "emailcodtee3gmail.com",
+    "emailcheck": "emailcodtee3@gmail.com",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-05-10T15:58:46.038Z",
+    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "enable": true,
+    "troops": [
+      ["chakcha", "wood", 1],
+      ["tarra", "ore", 2],
+      ["kella", "wood", 3]
+    ],
+    "stats": {
+      "gold": "9AM",
+      "wood": "203M",
+      "ore": "I24.7M",
+      "mana": "LSM",
+      "gems": "866"
     }
   }
 }

@@ -48,7 +48,9 @@ async function killApp() {
 
 async function startApp() {
   try {
-    const res = await exec(`"${LDPLAYER_PATH}" isrunning --name ${LDPLAYER_NAME}`);
+    const res = await exec(
+      `"${LDPLAYER_PATH}" isrunning --name ${LDPLAYER_NAME}`
+    );
     if (res.stdout.includes("running")) {
       console.log("LDPlayer is already running");
       return;
@@ -83,7 +85,7 @@ async function scrollDown(startx: number, starty: number) {
     adbOptions,
     `shell input swipe ${startx} ${starty} ${startx} ${
       starty - Math.round(100 + Math.random() * 20)
-    }`,
+    }`
   );
   await sleepRandom(100);
 }
@@ -110,7 +112,7 @@ async function findSubImageInCurrentScreen(imgPath: string, t = TOLERANCE) {
       height: subImg.info.height,
       data: new Uint8ClampedArray(subImg.data),
     },
-    t,
+    t
   );
   return results;
 }
@@ -139,7 +141,7 @@ async function waitForSubImage(imgPath: string, timeout: number) {
         height: subImg.info.height,
         data: new Uint8ClampedArray(subImg.data),
       },
-      TOLERANCE,
+      TOLERANCE
     );
     if (result !== null) {
       console.log("[waitForSubImage] found " + imgPath);
@@ -156,13 +158,13 @@ async function waitForSubImage(imgPath: string, timeout: number) {
       await fsPromises.writeFile(
         "./isBotChecking.lock",
         "isBotChecking.lock",
-        "utf-8",
+        "utf-8"
       );
       console.log("isBotChecking.lock created");
       await sendAlerts(
         "Slide to complete the puzzle, please check the game",
         "app",
-        new Error("Slide to complete the puzzle"),
+        new Error("Slide to complete the puzzle")
       );
       await flushAlerts();
       process.exit(0);
@@ -173,8 +175,8 @@ async function waitForSubImage(imgPath: string, timeout: number) {
 let sendAlertsTimeout: ReturnType<typeof setTimeout> | null = null;
 let sendMessageBatch: string[] = [];
 async function sendDiscordMessage(message: string, err?: unknown) {
-  const chatId = '-1002059527633'
-  const botToken = '7286680375:AAFNEeer3L_qAW4du7Y00st1mJlNBth_ZqI'
+  const chatId = "-1002059527633";
+  const botToken = "7286680375:AAFNEeer3L_qAW4du7Y00st1mJlNBth_ZqI";
   const payload = {
     chat_id: chatId,
     parse_mode: "HTML",
@@ -202,7 +204,7 @@ async function sendDiscordMessage(message: string, err?: unknown) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    },
+    }
   ).catch((err) => {
     console.error("Error sending alert", err);
   });
@@ -243,7 +245,7 @@ async function startGame() {
   sendAlerts("start game", "app");
   await runADBCommand(
     adbOptions,
-    "shell am start -n com.farlightgames.samo.gp.vn/com.harry.engine.MainActivity",
+    "shell am start -n com.farlightgames.samo.gp.vn/com.harry.engine.MainActivity"
   );
   await sleepRandom(DEFAULT_WAIT_TIME);
   await waitForAvatarImage();
@@ -251,7 +253,7 @@ async function startGame() {
 export type Troop = [
   name: string,
   resource: "wood" | "gold" | "ore" | "mana",
-  troopNumber: number,
+  troopNumber: number
 ];
 
 export interface Account {
@@ -261,13 +263,13 @@ export interface Account {
   gatherClanRss: boolean;
   gatherDragonPoint: boolean;
   nextCheckTime: string;
-  stats:{
-    gold:string;
-    wood:string;
-    ore:string;
-    mana:string;
-    gems:string;
-  }
+  stats: {
+    gold: string;
+    wood: string;
+    ore: string;
+    mana: string;
+    gems: string;
+  };
   nextAutoGatherTime: string;
   troops: Troop[];
 }
@@ -288,7 +290,7 @@ async function clickSettingButton(account: string) {
     adbOptions,
     "Settings",
     { x: 640, y: 100, width: 600, height: 600 },
-    { x: 0, y: -50 },
+    { x: 0, y: -50 }
   );
 }
 async function clickCharacterManagementButton(account: string) {
@@ -297,7 +299,7 @@ async function clickCharacterManagementButton(account: string) {
     adbOptions,
     "Character",
     { x: 200, y: 100, width: 800, height: 600 },
-    { x: 0, y: -50 },
+    { x: 0, y: -50 }
   );
 }
 async function clickAccountButton(account: string) {
@@ -306,7 +308,7 @@ async function clickAccountButton(account: string) {
     adbOptions,
     "Account",
     { x: 0, y: 0, width: 1280, height: 700 },
-    { x: 0, y: -50 },
+    { x: 0, y: -50 }
   );
 }
 
@@ -354,16 +356,16 @@ async function guessCurrentAccountFromScreen() {
     width: 1280,
     height: 720,
   });
-  console.log("allTexts", allTexts);
+  // console.log("allTexts", allTexts);
   if (
-    !allTexts.some((t) => t.text.includes('Power Merits')) &&
-    !allTexts.some((t) => t.text.includes('Lord')) &&
-    !allTexts.some((t) => t.text.includes('Achievements'))
+    !allTexts.some((t) => t.text.includes("Power Merits")) &&
+    !allTexts.some((t) => t.text.includes("Lord")) &&
+    !allTexts.some((t) => t.text.includes("Achievements"))
   ) {
     sendAlerts(
       "guessCurrentAccountFromScreen something wrong when start app view, please check",
       "app",
-      new Error("something wrong when start app view"),
+      new Error("something wrong when start app view")
     );
     throw new Error("something wrong when start app view");
   }
@@ -406,7 +408,7 @@ async function switchEmail(account: string, targetEmail: string) {
     await touchScreen(
       adbOptions,
       accountTexts.rect.x + accountTexts.rect.width / 2,
-      accountTexts.rect.y + accountTexts.rect.height / 2,
+      accountTexts.rect.y + accountTexts.rect.height / 2
     );
     await sleep(DEFAULT_WAIT_TIME);
   } else {
@@ -425,7 +427,7 @@ async function changeAccount(account: string, currentAccount: string) {
   const targetEmail = accounts[account].email;
   sendAlerts(
     "currentEmail=" + currentEmail + " targetEmail=" + targetEmail,
-    currentAccount,
+    currentAccount
   );
   let needSwitchCharacter = account !== currentAccount;
   if (currentEmail !== targetEmail) {
@@ -456,7 +458,7 @@ async function changeAccount(account: string, currentAccount: string) {
     await touchScreen(
       adbOptions,
       characterText.rect.x + characterText.rect.width / 2,
-      characterText.rect.y + characterText.rect.height / 2,
+      characterText.rect.y + characterText.rect.height / 2
     );
     await sleep(DEFAULT_WAIT_TIME);
     sendAlerts("Click confirm", currentAccount);
@@ -472,7 +474,7 @@ async function persistAccountSettings(account: string) {
   await fsPromises.writeFile(
     "./accounts.json",
     JSON.stringify(accounts, null, 2),
-    "utf-8",
+    "utf-8"
   );
   sendAlerts("Account settings saved", account);
 }
@@ -508,7 +510,7 @@ async function gatherClanRss(account: string) {
   });
   if (
     texts.some((t) =>
-      t.text.toLocaleLowerCase().includes("join an alliance now"),
+      t.text.toLocaleLowerCase().includes("join an alliance now")
     )
   ) {
     sendAlerts("You have been kicked out of the alliance", account);
@@ -554,7 +556,7 @@ async function clickMagnifyingGlass(account: string) {
 async function gatherRss(
   rssName: "wood" | "gold" | "ore" | "mana",
   troopNumber: number,
-  account: string,
+  account: string
 ) {
   sendAlerts("gatherRss " + rssName, account);
   let pos = await findSubImageInCurrentScreen("./imgs/map.png", 65);
@@ -580,7 +582,7 @@ async function gatherRss(
       height: 700,
     });
     const isSelected = texts.find(
-      (t) => t.text.toLocaleLowerCase() === "more " + rssName + ".",
+      (t) => t.text.toLocaleLowerCase() === "more " + rssName + "."
     );
     if (!isSelected) {
       sendAlerts("Click " + rssName, account);
@@ -635,13 +637,13 @@ async function clickButtonIfFound(imgPath: string) {
       "clickButton",
       btnPos,
       Math.round(btnPos.x + btnPos.width / 2),
-      Math.round(btnPos.y + btnPos.height / 2),
+      Math.round(btnPos.y + btnPos.height / 2)
     );
     await sleep(1000);
     await touchScreen(
       adbOptions,
       Math.round(btnPos.x + btnPos.width / 2),
-      Math.round(btnPos.y + btnPos.height / 2),
+      Math.round(btnPos.y + btnPos.height / 2)
     );
     await sleep(1000);
   }
@@ -662,18 +664,18 @@ async function doFarm(account: string, currentAccount: string) {
   accountSettings.stats = {
     gold: rssTexts[0]?.text || "",
     wood: rssTexts[1]?.text || "",
-    ore:  rssTexts[2]?.text || "",
+    ore: rssTexts[2]?.text || "",
     mana: rssTexts[3]?.text || "",
     gems: rssTexts[4]?.text || "",
-  }
-  
+  };
+
   await persistAccountSettings(account);
   if (accountSettings.nextAutoGatherTime < new Date().toISOString()) {
     if (accountSettings.gatherProdRss) await gatherProdRss(account);
     if (accountSettings.gatherClanRss) await gatherClanRss(account);
     if (accountSettings.gatherDragonPoint) await gatherDragonPoint(account);
     accountSettings.nextAutoGatherTime = new Date(
-      new Date().getTime() + 6 * 60 * 60 * 1000,
+      new Date().getTime() + 6 * 60 * 60 * 1000
     ).toISOString();
     await persistAccountSettings(account);
   }
@@ -692,7 +694,7 @@ async function doFarm(account: string, currentAccount: string) {
   for await (const troop of accountSettings.troops) {
     const [name, resource, troopNumber] = troop;
     const hasTroop = texts.find((t) =>
-      t.text.toLocaleLowerCase().includes(name.toLocaleLowerCase()),
+      t.text.toLocaleLowerCase().includes(name.toLocaleLowerCase())
     );
     if (hasTroop) {
       continue;
@@ -722,7 +724,7 @@ async function doFarm(account: string, currentAccount: string) {
   }
   // only revisit after 1 hour to prevent ban
   accountSettings.nextCheckTime = new Date(
-    Math.max(minGatheringTime, Date.now() + 3600 * 1000),
+    Math.max(minGatheringTime, Date.now() + 3600 * 1000)
   ).toISOString();
   sendAlerts("nextCheckTime=" + accountSettings.nextCheckTime, account);
   await persistAccountSettings(account);
@@ -740,7 +742,6 @@ async function main() {
     process.exit(0);
   }
   const accountToRun = Object.keys(accounts).filter((key) => {
-    console.log("key", accounts[key]);
     return (
       accounts[key].enable &&
       accounts[key].nextCheckTime < new Date().toISOString()
@@ -788,19 +789,30 @@ async function main() {
   }
   sendAlerts("all accounts done", "app");
 
-  const availableAccounts = Object.entries(accounts).filter(
-    ([key, value]) => {
-      return (
-        value.enable
-      )
-    }).sort((a, b) => {
+  const availableAccounts = Object.entries(accounts)
+    .filter(([key, value]) => {
+      return value.enable;
+    })
+    .sort((a, b) => {
       return (
         new Date(a[1].nextCheckTime).getTime() -
         new Date(b[1].nextCheckTime).getTime()
       );
     });
 
-  sendAlerts(availableAccounts.map((a) => a[0] + " next check =" + new Date(a[1].nextCheckTime).toLocaleString() + " stats="+JSON.stringify(a[1].stats)).join("\n"), "app");
+  sendAlerts(
+    availableAccounts
+      .map(
+        (a) =>
+          a[0] +
+          " next check =" +
+          new Date(a[1].nextCheckTime).toLocaleString() +
+          " stats=" +
+          JSON.stringify(a[1].stats)
+      )
+      .join("\n"),
+    "app"
+  );
   const nextAccount = availableAccounts[0][0];
 
   if (nextAccount && nextAccount !== currentAccount) {
@@ -810,23 +822,34 @@ async function main() {
   }
 }
 
-const to = setTimeout(
-  async () => {
-    sendAlerts("app timeout", "app");
-    await killApp();
-    process.exit(0);
-  },
-  40 * 60 * 1000,
-);
-async function testOcr() {
-  try {
-    const result = await ocrTextWithRect(`${path.resolve(__dirname, "./tmp/1746612238135.tmp.png")}`);
-    console.log('OCR Result:', result);
-  } catch (error) {
-    console.error('Test failed:', error);
-  }
+const to = setTimeout(async () => {
+  sendAlerts("app timeout", "app");
+  await killApp();
+  process.exit(0);
+}, 40 * 60 * 1000);
+
+// async function testOcr() {
+//   try {
+//     const result = await ocrTextWithRect(
+//       `${path.resolve(__dirname, "./tmp/test3.png")}`
+//     );
+//     console.log("OCR Result:", result);
+//   } catch (error) {
+//     console.error("Test failed:", error);
+//   }
+// }
+
+async function testCaptureScreen() {
+   const texts = await ocrScreenArea(adbOptions, {
+    x: 306,
+    y: 180,
+    width: 666,
+    height: 361,
+  })
+  console.log("texts", texts);
 }
 // testOcr();
+// testCaptureScreen();
 // await waitForAvatarImage();
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
