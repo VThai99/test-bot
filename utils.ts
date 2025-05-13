@@ -23,7 +23,6 @@ export const sleepRandom = async (ms: number) => {
     setTimeout(resolve, ms + Math.random() * 1000);
   });
 };
-
 export const ocrTextWithRect = async (
   imgPath: string
 ): Promise<
@@ -34,14 +33,11 @@ export const ocrTextWithRect = async (
 > => {
   try {
     const res = await exec(
-      `py ${path.resolve(
-        __dirname,
-        "DetechTextByEasyOCR.py"
-      )} ${imgPath}`
+      `py ${path.resolve(__dirname, "DetechTextByEasyOCR.py")} ${imgPath}`
     );
     const text = JSON.parse(res.stdout);
     // console.log("ocrTextWithRect", text);
-    return text.items
+    return text.items;
   } catch (e) {
     console.error(e);
   } finally {
@@ -126,6 +122,52 @@ export const ocrScreenArea = async (
   }
   return [];
 };
+export const findImagePosition = async (
+  adbOptions: string,
+  findImgPath: string
+): Promise<
+  {
+    isMatch: boolean;
+    rect: { x: number; y: number; width: number; height: number };
+  }
+> => {
+  const tmpFile = path.resolve(tmpDir, Date.now() + ".png");
+  try {
+    await captureScreen(adbOptions, tmpFile);
+    await sleepRandom(1000);
+
+    const res = await exec(
+      `py ${path.resolve(
+        __dirname,
+        "DetechImage.py"
+      )} ${tmpFile} ${findImgPath}`
+    );
+    const text = JSON.parse(res.stdout);
+    console.log("findPostion", text);
+    return {
+      isMatch: text.match,
+      rect: {
+        x: text.position.x,
+        y: text.position.y,
+        width: text.position.width,
+        height: text.position.height,
+      },
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    fs.unlinkSync(tmpFile);
+  }
+  return {
+    isMatch: false,
+    rect: {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+    },
+  };
+};
 export async function touchScreen(adbOptions: string, x: number, y: number) {
   return runADBCommand(
     adbOptions,
@@ -151,7 +193,7 @@ export async function clickButtonWithText(
       t.rect.y < rect.y + rect.height &&
       t.rect.y + t.rect.height > rect.y
     ) {
-      console.log("clickButtonWithText", t);
+      // console.log("clickButtonWithText", t);
       await touchScreen(
         adbOptions,
         t.rect.x + t.rect.width / 2 + offset.x,

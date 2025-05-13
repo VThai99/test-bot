@@ -9,6 +9,7 @@ import {
   touchScreen,
   sleep,
   ocrTextWithRect,
+  findImagePosition,
 } from "./utils";
 import { readFileSync, promises as fsPromises } from "fs";
 import console from "console";
@@ -346,10 +347,29 @@ async function guessCurrentAccountFromScreen() {
     for (const key in accounts) {
       if (t.text.includes(key)) {
         sendAlerts("guessCurrentAccountFromScreen currentAccount=" + key, key);
+        console.log("guessCurrentAccountFromScreen", key);
         return key;
       }
     }
   }
+  // const texts = await findImagePosition(
+  //   adbOptions,
+  //   `${path.resolve(__dirname, "./imgs/copy.png")}`
+  // );
+
+  // if (texts.isMatch) {
+  //   await touchScreen(
+  //     adbOptions,
+  //     Math.round(texts.rect.x + texts.rect.width / 2),
+  //     Math.round(texts.rect.y + texts.rect.height / 2)
+  //   );
+  //   await sleep(3000);
+  //   const res = await exec(
+  //     'powershell -command "Get-Clipboard"'
+  //   );
+  //   sendAlerts("guessCurrentAccountFromScreen currentAccount=" + res.stdout, res.stdout);
+  //   return res.stdout;
+  // }
   const allTexts = await ocrScreenArea(adbOptions, {
     x: 0,
     y: 0,
@@ -633,12 +653,12 @@ async function gatherRss(
 async function clickButtonIfFound(imgPath: string) {
   const btnPos = await findSubImageInCurrentScreen(imgPath);
   if (btnPos) {
-    console.log(
-      "clickButton",
-      btnPos,
-      Math.round(btnPos.x + btnPos.width / 2),
-      Math.round(btnPos.y + btnPos.height / 2)
-    );
+    // console.log(
+    //   "clickButton",
+    //   btnPos,
+    //   Math.round(btnPos.x + btnPos.width / 2),
+    //   Math.round(btnPos.y + btnPos.height / 2)
+    // );
     await sleep(1000);
     await touchScreen(
       adbOptions,
@@ -831,7 +851,7 @@ const to = setTimeout(async () => {
 // async function testOcr() {
 //   try {
 //     const result = await ocrTextWithRect(
-//       `${path.resolve(__dirname, "./tmp/test3.png")}`
+//       `${path.resolve(__dirname, "./tmp/tesssst.png")}`
 //     );
 //     console.log("OCR Result:", result);
 //   } catch (error) {
@@ -839,18 +859,22 @@ const to = setTimeout(async () => {
 //   }
 // }
 
-async function testCaptureScreen() {
-   const texts = await ocrScreenArea(adbOptions, {
-    x: 306,
-    y: 180,
-    width: 666,
-    height: 361,
-  })
-  console.log("texts", texts);
-}
+// async function testCaptureScreen() {
+//   const texts = await ocrScreenArea(adbOptions, {
+//     x: 453,
+//     y: 269,
+//     width: 110,
+//     height: 28,
+//   });
+//   console.log("texts", texts);
+// }
 // testOcr();
 // testCaptureScreen();
 // await waitForAvatarImage();
+// findImagePosition(adbOptions, `${path.resolve(__dirname, "./imgs/copy.png")}`);
+// guessCurrentAccountFromScreen()
+// run //
+
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
 await sleepRandom(DEFAULT_WAIT_TIME);
