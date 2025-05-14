@@ -343,6 +343,7 @@ async function guessCurrentAccountFromScreen() {
     width: 500,
     height: 60,
   });
+  console.log("guessCurrentAccountFromScreen texts", texts);
   for (const t of texts) {
     for (const key in accounts) {
       if (t.text.includes(key)) {
@@ -393,6 +394,7 @@ async function guessCurrentAccountFromScreen() {
 }
 
 async function switchEmail(account: string, targetEmail: string) {
+  console.log("switchEmailllllllllllllllll", account, targetEmail);
   await clickSettingButton(account);
   await sleepRandom(DEFAULT_WAIT_TIME);
   await clickAccountButton(account);
@@ -404,23 +406,23 @@ async function switchEmail(account: string, targetEmail: string) {
   await touchScreen(adbOptions, 937, 283);
   await sleep(DEFAULT_WAIT_TIME);
   const texts = await ocrScreenArea(adbOptions, {
-    x: 0,
-    y: 0,
-    width: 1200,
-    height: 700,
+    x: 305,
+    y: 177,
+    width: 682,
+    height: 388,
   });
-  let accountTexts = texts.find((t) => t.text === targetEmail);
+  let accountTexts = texts.find((t) => t.text.includes(targetEmail));
   let retry = 0;
   while (!accountTexts && retry < 5) {
     sendAlerts("Retry to find accountTexts retry=" + retry, account);
     await scrollDown(640, 380);
     const texts = await ocrScreenArea(adbOptions, {
-      x: 0,
-      y: 0,
-      width: 1200,
-      height: 700,
+      x: 305,
+      y: 177,
+      width: 682,
+      height: 388,
     });
-    accountTexts = texts.find((t) => t.text === targetEmail);
+    accountTexts = texts.find((t) => t.text.includes(targetEmail));
     retry++;
   }
   if (accountTexts) {
@@ -445,13 +447,14 @@ async function changeAccount(account: string, currentAccount: string) {
   sendAlerts("switchAccount " + account, currentAccount);
   const currentEmail = accounts[currentAccount]?.email;
   const targetEmail = accounts[account].email;
+  const targetID = accounts[account].id;
   sendAlerts(
     "currentEmail=" + currentEmail + " targetEmail=" + targetEmail,
     currentAccount
   );
   let needSwitchCharacter = account !== currentAccount;
   if (currentEmail !== targetEmail) {
-    await switchEmail(currentAccount, targetEmail);
+    await switchEmail(currentAccount, targetID);
     const currentAccount1 = await guessCurrentAccountFromScreen();
     sendAlerts("currentAccount1=" + currentAccount1, currentAccount);
     needSwitchCharacter = account !== currentAccount1;
@@ -859,15 +862,15 @@ const to = setTimeout(async () => {
 //   }
 // }
 
-// async function testCaptureScreen() {
-//   const texts = await ocrScreenArea(adbOptions, {
-//     x: 453,
-//     y: 269,
-//     width: 110,
-//     height: 28,
-//   });
-//   console.log("texts", texts);
-// }
+async function testCaptureScreen() {
+  const texts = await ocrScreenArea(adbOptions, {
+    x: 305,
+    y: 177,
+    width: 682,
+    height: 388,
+  });
+  console.log("texts", texts);
+}
 // testOcr();
 // testCaptureScreen();
 // await waitForAvatarImage();

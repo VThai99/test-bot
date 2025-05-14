@@ -2,7 +2,7 @@
   "farmwithTee": {
     "email": "vincentee1999@gmail.com",
     "emailcheck": "vincentee1999@gmail.com",
-    "id": "12160229",
+    "id": "805160",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
@@ -47,7 +47,7 @@
   "WoodTeeV3": {
     "email": "emailcodtee+farm1@gmail.com",
     "emailcheck": "emailcodteefarm1@gmail.com",
-    "id": "19618945",
+    "id": "1581287",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
@@ -75,7 +75,7 @@
   "StoneTeeV3": {
     "email": "emailcodtee+farm2@gmail.com",
     "emailcheck": "emailcodteefarm2@gmail.com",
-    "id": "19619057",
+    "id": "1591052",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
@@ -110,12 +110,12 @@
   "WoodTeeV4": {
     "email": "emailcodtee+farm3@gmail.com",
     "emailcheck": "emailcodteefarm3@gmail.com",
-    "id": "19619687",
+    "id": "1581289",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-10T15:58:46.038Z",
-    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "nextCheckTime": "2025-05-14T02:22:21.095Z",
+    "nextAutoGatherTime": "2025-05-14T06:22:27.732Z",
     "enable": true,
     "troops": [
       [
@@ -136,21 +136,21 @@
     ],
     "stats": {
       "gold": "9AM",
-      "wood": "203M",
-      "ore": "I24.7M",
+      "wood": "228M",
+      "ore": "J24.7M",
       "mana": "LSM",
       "gems": "866"
     }
   },
-  "WoodTee": {
+  "farmtee": {
     "email": "emailcodtee@gmail.com",
     "emailcheck": "emailcodtee@gmail.com",
-    "id": "19566110",
+    "id": "1570865",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-10T15:58:46.038Z",
-    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "nextCheckTime": "2025-05-14T00:47:11.248Z",
+    "nextAutoGatherTime": "2025-05-13T23:04:25.145Z",
     "enable": true,
     "troops": [
       [
@@ -161,7 +161,7 @@
       [
         "pan",
         "wood",
-        4
+        2
       ],
       [
         "kella",
@@ -170,22 +170,22 @@
       ]
     ],
     "stats": {
-      "gold": "9AM",
-      "wood": "203M",
-      "ore": "I24.7M",
-      "mana": "LSM",
-      "gems": "866"
+      "gold": "3.7M",
+      "wood": "J78M",
+      "ore": "92M",
+      "mana": "L7M",
+      "gems": "2,443"
     }
   },
   "WoodTeev2": {
     "email": "emailcodtee1@gmail.com",
     "emailcheck": "emailcodtee1@gmail.com",
-    "id": "19609192",
+    "id": "1591011",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-10T15:58:46.038Z",
-    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "nextCheckTime": "2025-05-14T01:44:36.657Z",
+    "nextAutoGatherTime": "2025-05-14T05:44:43.641Z",
     "enable": true,
     "troops": [
       [
@@ -205,22 +205,22 @@
       ]
     ],
     "stats": {
-      "gold": "9AM",
-      "wood": "203M",
-      "ore": "I24.7M",
-      "mana": "LSM",
-      "gems": "866"
+      "gold": "2.2M",
+      "wood": "I4IM",
+      "ore": "7AM",
+      "mana": "L6M",
+      "gems": "885"
     }
   },
-  "StoneTee": {
+  "teefarm": {
     "email": "emailcodtee2@gmail.com",
     "emailcheck": "emailcodtee2@gmail.com",
-    "id": "19608794",
+    "id": "1581241",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-12T17:50:17.763Z",
-    "nextAutoGatherTime": "2025-05-12T21:50:24.552Z",
+    "nextCheckTime": "2025-05-14T01:33:19.663Z",
+    "nextAutoGatherTime": "2025-05-14T05:33:25.850Z",
     "enable": true,
     "troops": [
       [
@@ -240,22 +240,22 @@
       ]
     ],
     "stats": {
-      "gold": "I9M",
-      "wood": "16.7M",
-      "ore": "L6M",
-      "mana": "4,237",
-      "gems": ""
+      "gold": "25M",
+      "wood": "I4OM",
+      "ore": "Z1M",
+      "mana": "L6M",
+      "gems": "2,813"
     }
   },
   "StoneTeeV2": {
     "email": "emailcodtee3@gmail.com",
     "emailcheck": "emailcodtee3@gmail.com",
-    "id": "19609434",
+    "id": "1581244",
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-10T15:58:46.038Z",
-    "nextAutoGatherTime": "2025-05-10T19:58:53.249Z",
+    "nextCheckTime": "2025-05-14T00:58:34.413Z",
+    "nextAutoGatherTime": "2025-05-14T04:58:40.799Z",
     "enable": true,
     "troops": [
       [
@@ -275,11 +275,11 @@
       ]
     ],
     "stats": {
-      "gold": "9AM",
-      "wood": "203M",
-      "ore": "I24.7M",
-      "mana": "LSM",
-      "gems": "866"
+      "gold": "BM",
+      "wood": "213M",
+      "ore": "78M",
+      "mana": "L8M",
+      "gems": "4,242"
     }
   }
 }
