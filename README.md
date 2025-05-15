@@ -1,15 +1,22 @@
-# bot
-
-To install dependencies:
-
-```bash
-bun install
+# Bot for window
+# Important
+- Install Node. [(Link)](https://nodejs.org/en/download)
+- Install python. [(Link)](https://www.python.org/downloads/)
+- Install Bun. [(Link doc)](https://bun.sh/)
+# Install library
+- Edit file accounts.json.
+- install library
 ```
-
-To run:
-
-```bash
-bun run index.ts
+npm i
 ```
-
-This project was created using `bun init` in bun v1.2.10. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+```
+pip install easyocr
+pip install pillow
+pip install opencv-python
+pip install numpy
+pip install argparse
+```
+# Run program
+```
+npm run start
+```

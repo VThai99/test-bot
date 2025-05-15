@@ -15,7 +15,7 @@ export function sleep(ms: number): Promise<void> {
 
 export async function runADBCommand(options: string, command: string) {
   const adbPath = "D:\\LDPlayer\\LDPlayer9\\adb";
-  const fullCommand = `"${adbPath}" -s 127.0.0.1:5555 ${options} ${command}`;
+  const fullCommand = `"${adbPath}" ${options} ${command}`;
   return exec(fullCommand);
 }
 export const sleepRandom = async (ms: number) => {
@@ -36,7 +36,6 @@ export const ocrTextWithRect = async (
       `py ${path.resolve(__dirname, "DetechTextByEasyOCR.py")} ${imgPath}`
     );
     const text = JSON.parse(res.stdout);
-    // console.log("ocrTextWithRect", text);
     return text.items;
   } catch (e) {
     console.error(e);
@@ -143,7 +142,6 @@ export const findImagePosition = async (
       )} ${tmpFile} ${findImgPath}`
     );
     const text = JSON.parse(res.stdout);
-    console.log("findPostion", text);
     return {
       isMatch: text.match,
       rect: {
@@ -183,17 +181,15 @@ export async function clickButtonWithText(
   offset: { x: number; y: number } = { x: 0, y: 0 }
 ): Promise<boolean> {
   let texts = await ocrScreenArea(adbOptions, rect);
-  // console.log("clickButtonWithText", texts);
   //   process.exit(0);
   for (const t of texts) {
     if (
-      t.text === text &&
+      t.text.includes(text) &&
       t.rect.x < rect.x + rect.width &&
       t.rect.x + t.rect.width > rect.x &&
       t.rect.y < rect.y + rect.height &&
       t.rect.y + t.rect.height > rect.y
     ) {
-      // console.log("clickButtonWithText", t);
       await touchScreen(
         adbOptions,
         t.rect.x + t.rect.width / 2 + offset.x,

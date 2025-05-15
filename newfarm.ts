@@ -289,7 +289,7 @@ async function clickSettingButton(account: string) {
   sendAlerts("clickSettingButton", account);
   return clickButtonWithText(
     adbOptions,
-    "Settings",
+    "Sett",
     { x: 640, y: 100, width: 600, height: 600 },
     { x: 0, y: -50 }
   );
@@ -326,10 +326,10 @@ async function clickSwitchAccountButton(account: string) {
 async function clickLoginButton(account: string) {
   sendAlerts("clickLoginButton", account);
   return clickButtonWithText(adbOptions, "Login", {
-    x: 0,
-    y: 0,
-    width: 1280,
-    height: 700,
+    x: 385,
+    y: 209,
+    width: 513,
+    height: 299,
   });
 }
 async function sendEscKey(account: string) {
@@ -343,12 +343,10 @@ async function guessCurrentAccountFromScreen() {
     width: 500,
     height: 60,
   });
-  console.log("guessCurrentAccountFromScreen texts", texts);
   for (const t of texts) {
     for (const key in accounts) {
       if (t.text.includes(key)) {
         sendAlerts("guessCurrentAccountFromScreen currentAccount=" + key, key);
-        console.log("guessCurrentAccountFromScreen", key);
         return key;
       }
     }
@@ -377,7 +375,6 @@ async function guessCurrentAccountFromScreen() {
     width: 1280,
     height: 720,
   });
-  // console.log("allTexts", allTexts);
   if (
     !allTexts.some((t) => t.text.includes("Power Merits")) &&
     !allTexts.some((t) => t.text.includes("Lord")) &&
@@ -394,7 +391,6 @@ async function guessCurrentAccountFromScreen() {
 }
 
 async function switchEmail(account: string, targetEmail: string) {
-  console.log("switchEmailllllllllllllllll", account, targetEmail);
   await clickSettingButton(account);
   await sleepRandom(DEFAULT_WAIT_TIME);
   await clickAccountButton(account);
@@ -403,7 +399,7 @@ async function switchEmail(account: string, targetEmail: string) {
   await sleepRandom(DEFAULT_WAIT_TIME);
 
   sendAlerts("Click Dropdown", account);
-  await touchScreen(adbOptions, 937, 283);
+  await touchScreen(adbOptions, 586, 315);
   await sleep(DEFAULT_WAIT_TIME);
   const texts = await ocrScreenArea(adbOptions, {
     x: 305,
@@ -728,7 +724,6 @@ async function doFarm(account: string, currentAccount: string) {
   }
   for (const t of texts) {
     if (t.text.startsWith("Gathering ") || t.text.startsWith("Returning ")) {
-      console.log("t.text", t.text);
       const timeStr = t.text.split(" ")[1];
       const timeParts = timeStr.split(":");
       if (timeParts.length === 3) {
@@ -851,33 +846,7 @@ const to = setTimeout(async () => {
   process.exit(0);
 }, 40 * 60 * 1000);
 
-// async function testOcr() {
-//   try {
-//     const result = await ocrTextWithRect(
-//       `${path.resolve(__dirname, "./tmp/tesssst.png")}`
-//     );
-//     console.log("OCR Result:", result);
-//   } catch (error) {
-//     console.error("Test failed:", error);
-//   }
-// }
-
-async function testCaptureScreen() {
-  const texts = await ocrScreenArea(adbOptions, {
-    x: 305,
-    y: 177,
-    width: 682,
-    height: 388,
-  });
-  console.log("texts", texts);
-}
-// testOcr();
-// testCaptureScreen();
-// await waitForAvatarImage();
-// findImagePosition(adbOptions, `${path.resolve(__dirname, "./imgs/copy.png")}`);
-// guessCurrentAccountFromScreen()
-// run //
-
+// run the script
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
 await sleepRandom(DEFAULT_WAIT_TIME);
