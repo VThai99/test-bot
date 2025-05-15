@@ -6,8 +6,8 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-14T09:28:05.810Z",
-    "nextAutoGatherTime": "2025-05-14T08:11:04.803Z",
+    "nextCheckTime": "2025-05-15T12:13:06.793Z",
+    "nextAutoGatherTime": "2025-05-15T16:13:13.812Z",
     "enable": true,
     "troops": [
       [
@@ -37,11 +37,11 @@
       ]
     ],
     "stats": {
-      "gold": "B0.6M",
-      "wood": "485.3M",
-      "ore": "362 3M",
-      "mana": "3M",
-      "gems": "18475"
+      "gold": "BOM",
+      "wood": "504AM",
+      "ore": "367M",
+      "mana": "2.9M",
+      "gems": "5,875"
     }
   },
   "WoodTeeV3": {
@@ -51,8 +51,8 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-14T03:49:54.320Z",
-    "nextAutoGatherTime": "2025-05-14T07:50:01.844Z",
+    "nextCheckTime": "2025-05-15T12:01:23.768Z",
+    "nextAutoGatherTime": "2025-05-15T16:01:30.969Z",
     "enable": true,
     "troops": [
       [
@@ -72,11 +72,11 @@
       ]
     ],
     "stats": {
-      "gold": "IB7M",
-      "wood": "I96M",
-      "ore": "J0.8M",
-      "mana": "LIM",
-      "gems": "4,039"
+      "gold": "IBAM",
+      "wood": "2O.7M",
+      "ore": "I2IM",
+      "mana": "12M",
+      "gems": "4,104"
     }
   },
   "StoneTeeV3": {
@@ -86,8 +86,8 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-14T03:30:02.238Z",
-    "nextAutoGatherTime": "2025-05-14T07:30:08.977Z",
+    "nextCheckTime": "2025-05-15T11:04:04.592Z",
+    "nextAutoGatherTime": "2025-05-15T15:04:11.863Z",
     "enable": true,
     "troops": [
       [
@@ -107,11 +107,11 @@
       ]
     ],
     "stats": {
-      "gold": "I84M",
-      "wood": "18 3M",
-      "ore": "IO.IM",
-      "mana": "U2M",
-      "gems": "4066"
+      "gold": "83M",
+      "wood": "206M",
+      "ore": "12 7M",
+      "mana": "IAM",
+      "gems": "3,146"
     }
   },
   "WoodTeeV4": {
@@ -121,7 +121,7 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-15T08:47:08.057Z",
+    "nextCheckTime": "2025-05-15T11:24:03.760Z",
     "nextAutoGatherTime": "2025-05-15T12:47:15.705Z",
     "enable": true,
     "troops": [
@@ -142,11 +142,11 @@
       ]
     ],
     "stats": {
-      "gold": "8.7M",
-      "wood": "29AM",
-      "ore": "126.2M",
+      "gold": "86M",
+      "wood": "293M",
+      "ore": "1262M",
       "mana": "L6M",
-      "gems": "2,926"
+      "gems": "2,936"
     }
   },
   "farmtee": {
@@ -156,8 +156,8 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-14T11:18:01.946Z",
-    "nextAutoGatherTime": "2025-05-14T16:12:21.077Z",
+    "nextCheckTime": "2025-05-15T10:52:12.405Z",
+    "nextAutoGatherTime": "2025-05-15T14:52:19.657Z",
     "enable": true,
     "troops": [
       [
@@ -177,11 +177,11 @@
       ]
     ],
     "stats": {
-      "gold": "32M",
-      "wood": "20.9M",
-      "ore": "8.5M",
-      "mana": "L6M",
-      "gems": "2,148"
+      "gold": "37M",
+      "wood": "24M",
+      "ore": "IOM",
+      "mana": "19M",
+      "gems": "2,203"
     }
   },
   "WoodTeev2": {
@@ -191,7 +191,7 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-15T09:30:25.188Z",
+    "nextCheckTime": "2025-05-15T11:41:36.372Z",
     "nextAutoGatherTime": "2025-05-15T13:30:32.597Z",
     "enable": true,
     "troops": [
@@ -212,11 +212,11 @@
       ]
     ],
     "stats": {
-      "gold": "L6M",
-      "wood": "182M",
+      "gold": "ISM",
+      "wood": "18IM",
       "ore": "Z6M",
       "mana": "L7M",
-      "gems": "960"
+      "gems": "970"
     }
   },
   "teefarm": {
@@ -226,7 +226,7 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-15T09:18:53.061Z",
+    "nextCheckTime": "2025-05-15T11:36:44.564Z",
     "nextAutoGatherTime": "2025-05-15T13:19:00.595Z",
     "enable": true,
     "troops": [
@@ -247,11 +247,11 @@
       ]
     ],
     "stats": {
-      "gold": "2AM",
-      "wood": "19.7M",
-      "ore": "8.8M",
+      "gold": "2BM",
+      "wood": "I96M",
+      "ore": "18.8MI",
       "mana": "L8M",
-      "gems": "2,878"
+      "gems": "2,893"
     }
   },
   "StoneTeeV2": {
@@ -261,7 +261,7 @@
     "gatherProdRss": false,
     "gatherClanRss": false,
     "gatherDragonPoint": false,
-    "nextCheckTime": "2025-05-15T08:58:47.201Z",
+    "nextCheckTime": "2025-05-15T11:19:37.005Z",
     "nextAutoGatherTime": "2025-05-15T12:58:54.635Z",
     "enable": true,
     "troops": [
@@ -286,7 +286,7 @@
       "wood": "236M",
       "ore": "9.IM",
       "mana": "19M",
-      "gems": "1,302"
+      "gems": "1322"
     }
   }
 }

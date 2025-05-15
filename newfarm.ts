@@ -749,6 +749,7 @@ async function doFarm(account: string, currentAccount: string) {
   await clickButtonIfFound("./imgs/btn_sickle.png");
   await clickButtonIfFound("./imgs/btn_help.png");
   await clickTopLeftAvatar(account);
+  await sleepRandom(DEFAULT_WAIT_TIME)
   sendAlerts("done farm", account);
 }
 
