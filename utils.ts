@@ -14,8 +14,8 @@ export function sleep(ms: number): Promise<void> {
 }
 
 export async function runADBCommand(options: string, command: string) {
-  const adbPath = "D:\\LDPlayer\\LDPlayer9\\adb";
-  const fullCommand = `"${adbPath}" ${options} ${command}`;
+  const adbPath = "C:\\Program Files\\BlueStacks_nxt\\HD-Adb.exe";
+  const fullCommand = `"${adbPath}" -s 127.0.0.1:5555 ${options} ${command}`;
   return exec(fullCommand);
 }
 export const sleepRandom = async (ms: number) => {

@@ -23,9 +23,8 @@ const AVATAR_IMAGE_PATH = "./imgs/avatar1.png";
 const adbOptions = "-e";
 const DEFAULT_WAIT_TIME = 15000;
 const DEFAULT_WAIT_TIME_LONG = 15000;
-const ADB_PATH = "D:\\LDPlayer\\LDPlayer9\\adb.exe";
-const LDPLAYER_PATH = "D:\\LDPlayer\\LDPlayer9\\ldconsole.exe";
-const LDPLAYER_NAME = "tee"; // Your LDPlayer instance name
+const ADB_PATH = "C:\\Program Files\\BlueStacks_nxt\\HD-Adb.exe";
+const PLAYER_PATH = "C:\\Program Files\\BlueStacks_nxt\\HD-Player.exe";
 
 const RESOURCE_BUTTONS = {
   gold: { x: 426, y: 639 },
@@ -44,28 +43,27 @@ const TROOP_BUTTONS: Record<string, { x: number; y: number }> = {
 
 async function killApp() {
   console.log("kill app");
-  await exec(`"${LDPLAYER_PATH}" quit --name ${LDPLAYER_NAME}`);
+  exec('taskkill /f /im "HD-Player.exe"');
 }
 
 async function startApp() {
   try {
     const res = await exec(
-      `"${LDPLAYER_PATH}" isrunning --name ${LDPLAYER_NAME}`
+      'tasklist'
     );
-    if (res.stdout.includes("running")) {
-      console.log("LDPlayer is already running");
+    if (res.stdout.includes("HD-Player.exe")) {
+      console.log("BlueStack is already running");
       return;
     }
     console.log("start app");
-    await exec(`"${LDPLAYER_PATH}" launch --name ${LDPLAYER_NAME}`);
-    console.log("wait for ld to start");
+    exec(`"${PLAYER_PATH}"`)
+    console.log("wait for simulator to start");
     await sleep(20000);
-    console.log("connect to ld");
-    await exec(`"${ADB_PATH}" connect 127.0.0.1:5555`);
+    console.log("connect to simulator");
+    exec(`"${ADB_PATH}" connect 127.0.0.1:5555`);
     await sleep(10000);
-    console.log(await exec(`"${ADB_PATH}" devices`));
   } catch (error) {
-    console.error("Error starting ld:", error);
+    console.error("Error starting simulator:", error);
     throw error;
   }
 }
@@ -176,12 +174,12 @@ async function waitForSubImage(imgPath: string, timeout: number) {
 let sendAlertsTimeout: ReturnType<typeof setTimeout> | null = null;
 let sendMessageBatch: string[] = [];
 async function sendDiscordMessage(message: string, err?: unknown) {
-  const chatId = "-1002059527633";
-  const botToken = "7286680375:AAFNEeer3L_qAW4du7Y00st1mJlNBth_ZqI";
+
   const payload = {
-    chat_id: chatId,
-    parse_mode: "HTML",
-    text: message,
+    // the username to be displayed
+    username: "bot-alerts",
+    // contents of the message to be sent
+    content: message,
     ...(err
       ? {
           embeds: [
@@ -198,14 +196,14 @@ async function sendDiscordMessage(message: string, err?: unknown) {
       : {}),
   };
   const res = await fetch(
-    `https://api.telegram.org/bot${botToken}/sendMessage`,
+    "https://discord.com/api/webhooks/1379036866489356378/dqfrzRFMDNuMY2FuQwZjJFHxPTE8EbkY_vWHTZ-wZhHsgSiiv1rFG1vZLP3y8-tCjnLQ",
     {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    }
+    },
   ).catch((err) => {
     console.error("Error sending alert", err);
   });
@@ -326,10 +324,10 @@ async function clickSwitchAccountButton(account: string) {
 async function clickLoginButton(account: string) {
   sendAlerts("clickLoginButton", account);
   return clickButtonWithText(adbOptions, "Login", {
-    x: 385,
-    y: 209,
-    width: 513,
-    height: 299,
+    x: 474,
+    y: 272,
+    width: 326,
+    height: 178,
   });
 }
 async function sendEscKey(account: string) {
@@ -402,10 +400,10 @@ async function switchEmail(account: string, targetEmail: string) {
   await touchScreen(adbOptions, 586, 315);
   await sleep(DEFAULT_WAIT_TIME);
   const texts = await ocrScreenArea(adbOptions, {
-    x: 305,
-    y: 177,
-    width: 682,
-    height: 388,
+    x: 304,
+    y: 327,
+    width: 672,
+    height: 284,
   });
   let accountTexts = texts.find((t) => t.text.includes(targetEmail));
   let retry = 0;
@@ -413,10 +411,10 @@ async function switchEmail(account: string, targetEmail: string) {
     sendAlerts("Retry to find accountTexts retry=" + retry, account);
     await scrollDown(640, 380);
     const texts = await ocrScreenArea(adbOptions, {
-      x: 305,
-      y: 177,
-      width: 682,
-      height: 388,
+      x: 304,
+      y: 327,
+      width: 672,
+      height: 284,
     });
     accountTexts = texts.find((t) => t.text.includes(targetEmail));
     retry++;
@@ -845,7 +843,7 @@ const to = setTimeout(async () => {
   sendAlerts("app timeout", "app");
   await killApp();
   process.exit(0);
-}, 40 * 60 * 1000);
+},640 * 60 * 1000);
 
 // run the script
 await main();
