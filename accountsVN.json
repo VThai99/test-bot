@@ -1,0 +1,134 @@
+{
+  "farmwithTee": {
+    "email": "vincentee1999@gmail.com",
+    "id": "805160",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-06-20T04:18:33.089Z",
+    "nextAutoGatherTime": "2025-06-20T08:18:40.653Z",
+    "enable": true,
+    "troops": [
+      [
+        "chakcha",
+        "ore",
+        1
+      ],
+      [
+        "naernin",
+        "wood",
+        2
+      ],
+      [
+        "pan",
+        "wood",
+        3
+      ],
+      [
+        "tarra",
+        "ore",
+        4
+      ],
+      [
+        "kella",
+        "ore",
+        5
+      ]
+    ],
+    "stats": {
+      "gold": "92M",
+      "wood": "442.SM",
+      "ore": "320.3M",
+      "mana": "2AM",
+      "gems": "3,752"
+    }
+  },
+  "farmtee7": {
+    "email": "emailcodtee1@gmail.com",
+    "id": "1591011",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-07-08T02:38:42.960Z",
+    "nextAutoGatherTime": "2025-07-08T07:38:01.908Z",
+    "enable": true,
+    "troops": [
+      [
+        "chakcha",
+        "wood",
+        1
+      ],
+      [
+        "naernin",
+        "wood",
+        2
+      ],
+      [
+        "pan",
+        "wood",
+        3
+      ],
+      [
+        "tarra",
+        "ore",
+        4
+      ],
+      [
+        "kella",
+        "ore",
+        5
+      ]
+    ],
+    "stats": {
+      "gold": "744,7K",
+      "wood": "212,3M",
+      "ore": "80,5M-",
+      "mana": "Z,5M",
+      "gems": "14939"
+    }
+  },
+  "farmtee8": {
+    "email": "emailcodtee3@gmail.com",
+    "id": "1581244",
+    "gatherProdRss": false,
+    "gatherClanRss": false,
+    "gatherDragonPoint": false,
+    "nextCheckTime": "2025-07-08T02:45:22.581Z",
+    "nextAutoGatherTime": "2025-07-08T07:44:41.204Z",
+    "enable": true,
+    "troops": [
+      [
+        "chakcha",
+        "wood",
+        1
+      ],
+      [
+        "naernin",
+        "wood",
+        2
+      ],
+      [
+        "pan",
+        "wood",
+        3
+      ],
+      [
+        "tarra",
+        "ore",
+        4
+      ],
+      [
+        "kella",
+        "ore",
+        5
+      ]
+    ],
+    "stats": {
+      "gold": "AJM",
+      "wood": "207.8M",
+      "ore": "2M",
+      "mana": "23M",
+      "gems": "3,754"
+    }
+  }
+}

@@ -9,7 +9,8 @@ dist
 # code coverage
 coverage
 *.lcov
-
+# assets folder
+tmp
 # logs
 logs
 _.log
@@ -32,3 +33,4 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # Finder (MacOS) folder config
 .DS_Store
+google-credentials.json

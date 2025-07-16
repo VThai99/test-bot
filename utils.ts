@@ -1,9 +1,10 @@
 import sharp from "sharp";
 import Tesseract from "tesseract.js";
 import path from "path";
-
+import { google } from 'googleapis';
 import * as fs from "fs";
 import { findSubImagePosition } from "./image";
+import { sendAlerts, type Account } from "./newfarm";
 
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
@@ -13,7 +14,31 @@ export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function killApp() {
+  console.log("kill app");
+  sendAlerts("kill app", "app");
+  exec('taskkill /f /im "HD-Player.exe"');
+}
+
+let adbTimeout: NodeJS.Timeout | null = null;
+
+// Function to reset the timeout countdown
+function resetTimeout() {
+  if (adbTimeout) {
+    clearTimeout(adbTimeout);
+  }
+  adbTimeout = setTimeout(async () => {
+    console.log("ADB timeout: Killing app and exiting process...");
+    await killApp();
+    await sleep(5000);
+    process.exit(0);
+  }, 5 * 60 * 1000);
+}
+
+// Updated runADBCommand function
 export async function runADBCommand(options: string, command: string) {
+  resetTimeout(); // Reset the timeout countdown whenever this function is called
+
   const adbPath = "C:\\Program Files\\BlueStacks_nxt\\HD-Adb.exe";
   const fullCommand = `"${adbPath}" -s 127.0.0.1:5555 ${options} ${command}`;
   return exec(fullCommand);
@@ -124,12 +149,10 @@ export const ocrScreenArea = async (
 export const findImagePosition = async (
   adbOptions: string,
   findImgPath: string
-): Promise<
-  {
-    isMatch: boolean;
-    rect: { x: number; y: number; width: number; height: number };
-  }
-> => {
+): Promise<{
+  isMatch: boolean;
+  rect: { x: number; y: number; width: number; height: number };
+}> => {
   const tmpFile = path.resolve(tmpDir, Date.now() + ".png");
   try {
     await captureScreen(adbOptions, tmpFile);
@@ -150,7 +173,7 @@ export const findImagePosition = async (
         width: text.position.width,
         height: text.position.height,
       },
-    }
+    };
   } catch (e) {
     console.error(e);
   } finally {
@@ -230,4 +253,187 @@ export async function checkImageExistedOnScreen(
     return results;
   }
   return null;
+}
+
+// Ensure the timeout is cleared when the process exits
+process.on("exit", () => {
+  if (adbTimeout) {
+    clearTimeout(adbTimeout);
+  }
+});
+
+// fetchdatafromggsheet
+const getSheetData = ({ sheetID, sheetName, query }: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const base = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?`;
+    const url = `${base}&sheet=${encodeURIComponent(
+      sheetName
+    )}&tq=${encodeURIComponent(query)}`;
+
+    fetch(url)
+      .then((res) => res.text())
+      .then((response) => {
+        const data = responseToObjects(response);
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sheet data:", error);
+        reject(error); // Reject the Promise on error
+      });
+
+    function responseToObjects(res: any) {
+      // credit to Laurence Svekis https://www.udemy.com/course/sheet-data-ajax/
+      const jsData = JSON.parse(res.substring(47).slice(0, -2));
+      let data = [];
+      const columns = jsData.table.cols;
+      const rows = jsData.table.rows;
+      let rowObject;
+      let cellData;
+      let propName;
+      for (let r = 0, rowMax = rows.length; r < rowMax; r++) {
+        rowObject = {};
+        for (let c = 0, colMax = columns.length; c < colMax; c++) {
+          cellData = rows[r]["c"][c];
+          propName = columns[c].label;
+          if (cellData === null) {
+            rowObject[propName] = "";
+          } else if (
+            typeof cellData["v"] == "string" &&
+            cellData["v"].startsWith("Date")
+          ) {
+            rowObject[propName] = new Date(cellData["f"]);
+          } else {
+            rowObject[propName] = cellData["v"];
+          }
+        }
+        data.push(rowObject);
+      }
+      return data;
+    }
+  });
+};
+export async function fetchAccountsFromGoogleSheets() {
+  const dataRes = await getSheetData({
+    sheetID: "1-8uVw0_c48oiFn-r5KFiDhFyvbtPM1KUrRQDspbQJlA",
+    sheetName: "acc",
+    // Use proper Google Sheets datetime format
+    query: `SELECT * WHERE D = TRUE`,
+  });
+  return dataRes;
+}
+
+// update data to google sheets
+// --- AUTHENTICATION (This part uses your new key file) ---
+const auth = new google.auth.GoogleAuth({
+  // Correct the path to your downloaded key file
+  keyFile: './google-credentials.json', // IMPORTANT: Keep this file secure
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+const sheets = google.sheets({ version: 'v4', auth });
+const SPREADSHEET_ID = "1-8uVw0_c48oiFn-r5KFiDhFyvbtPM1KUrRQDspbQJlA";
+async function findAccountRow(accountName: string): Promise<number> {
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'acc!A2:A', // Search only in the first column (account names)
+    });
+    const accountNames = response.data.values?.flat() || [];
+    // Find the index. +1 because arrays are 0-indexed, +1 for the header row.
+    const rowIndex = accountNames.indexOf(accountName);
+    return rowIndex !== -1 ? rowIndex + 2 : -1;
+  } catch (error) {
+    console.error(`Error finding row for account ${accountName}: ${error.message}`);
+    return -1;
+  }
+}
+const columnMap: { [key: string]: string } = {
+  'nextCheckTime': 'H',
+  'nextAutoGatherTime': 'I',
+  'stats': 'K',
+}
+/**
+ * Updates specific columns for a given account in the Google Sheet.
+ * This is the main function you will call from newfarm.ts.
+ * @param accountName The name of the account to update.
+ * @param data An object with the data to update, e.g., { H: 'new_time', J: 'new_stats' }
+ */
+export async function updateAccountInSheet(accountName: string, data: { [column: string]: any }) {
+  const row = await findAccountRow(accountName);
+  if (row === -1) {
+    console.log(`Could not update sheet: Account "${accountName}" not found.`);
+    return;
+  }
+  const updates = Object.entries(data).map(([column, value]) => ({
+    range: `acc!${columnMap[column]}${row}`, // e.g., 'acc!H5'
+    values: [[typeof value === 'object' ? JSON.stringify(value) : value]],
+  }));
+
+  if (updates.length === 0) return;
+
+  try {
+    await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      requestBody: {
+        valueInputOption: 'USER_ENTERED',
+        data: updates,
+      },
+    });
+    console.log(`✓ Google Sheet updated for account: ${accountName}`);
+  } catch (error) {
+    console.error(`Error batch updating sheet for ${accountName}: ${error.message}`);
+  }
+}
+
+export function convertSheetDataToAccounts(sheetData: any[]): Record<string, Account> {
+  if (!sheetData || sheetData.length === 0) {
+    return {};
+  }
+
+  return sheetData.reduce((accountsObject, currentAccount) => {
+    // Ensure the account has a name to be used as a key
+    const accountName = currentAccount.name;
+    if (!accountName) {
+      return accountsObject; // Skip entries without a name
+    }
+
+    // Safely parse the 'troops' JSON string into an array
+    let troops = [];
+    if (typeof currentAccount.troops === 'string' && currentAccount.troops.trim() !== '') {
+      try {
+        troops = JSON.parse(currentAccount.troops);
+      } catch (e) {
+        console.error(`Error parsing troops for account ${accountName}:`, e);
+        // Keep troops as an empty array on error
+      }
+    }
+
+    // Safely parse the 'stats' JSON string into an object
+    let stats = { gold: "", wood: "", ore: "", mana: "", gems: "" };
+    if (typeof currentAccount.stats === 'string' && currentAccount.stats.trim() !== '') {
+      try {
+        const parsedStats = JSON.parse(currentAccount.stats);
+        // Merge with default to ensure all keys exist
+        stats = { ...stats, ...parsedStats };
+      } catch (e) {
+        console.error(`Error parsing stats for account ${accountName}:`, e);
+      }
+    }
+
+    // Build the final account object in the desired format
+    accountsObject[accountName] = {
+      email: currentAccount.email || "",
+      id: String(currentAccount.id || ""), // Ensure id is a string
+      enable: currentAccount.enable === true || currentAccount.enable === 'TRUE',
+      gatherProdRss: currentAccount.gatherProdRss === true || currentAccount.gatherProdRss === 'TRUE',
+      gatherClanRss: currentAccount.gatherClanRss === true || currentAccount.gatherClanRss === 'TRUE',
+      gatherDragonPoint: currentAccount.gatherDragonPoint === true || currentAccount.gatherDragonPoint === 'TRUE',
+      nextCheckTime: currentAccount.nextCheckTime || new Date().toISOString(),
+      nextAutoGatherTime: currentAccount.nextAutoGatherTime || new Date().toISOString(),
+      troops: troops,
+      stats: stats,
+      type: currentAccount.type || 'funtab',
+    };
+
+    return accountsObject;
+  }, {} as Record<string, Account>);
 }

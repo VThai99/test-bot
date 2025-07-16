@@ -17,6 +17,7 @@
     "console": "^0.7.2",
     "discord.js": "^14.19.3",
     "fs": "^0.0.1-security",
+    "googleapis": "^150.0.1",
     "node-tesseract-ocr": "^2.2.1",
     "path": "^0.12.7",
     "sharp": "^0.34.1",

@@ -8,23 +8,34 @@ import {
   sleepRandom,
   touchScreen,
   sleep,
-  ocrTextWithRect,
-  findImagePosition,
+  // ocrTextWithRect,
+  // findImagePosition,
+  fetchAccountsFromGoogleSheets,
+  updateAccountInSheet,
+  convertSheetDataToAccounts,
 } from "./utils";
 import { readFileSync, promises as fsPromises } from "fs";
 import console from "console";
-import path from "path";
+// import path from "path";
 
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 const TOLERANCE = 65;
-const AVATAR_IMAGE_PATH = "./imgs/avatar1.png";
+const AVATAR_IMAGE_PATH = "./imgs/mission1.jpg";
 const adbOptions = "-e";
 const DEFAULT_WAIT_TIME = 15000;
 const DEFAULT_WAIT_TIME_LONG = 15000;
 const ADB_PATH = "C:\\Program Files\\BlueStacks_nxt\\HD-Adb.exe";
 const PLAYER_PATH = "C:\\Program Files\\BlueStacks_nxt\\HD-Player.exe";
+const URL_APP = "com.farlightgames.samo.gp";
+const URL_APP_VN = "com.farlightgames.samo.gp.vn";
+
+let currentApp: string = URL_APP_VN;
+const appObj = {
+  funtab: URL_APP_VN,
+  global: URL_APP,
+};
 
 const RESOURCE_BUTTONS = {
   gold: { x: 426, y: 639 },
@@ -48,15 +59,13 @@ async function killApp() {
 
 async function startApp() {
   try {
-    const res = await exec(
-      'tasklist'
-    );
+    const res = await exec("tasklist");
     if (res.stdout.includes("HD-Player.exe")) {
       console.log("BlueStack is already running");
       return;
     }
     console.log("start app");
-    exec(`"${PLAYER_PATH}"`)
+    exec(`"${PLAYER_PATH}"`);
     console.log("wait for simulator to start");
     await sleep(20000);
     console.log("connect to simulator");
@@ -68,14 +77,11 @@ async function startApp() {
   }
 }
 
-async function killGame() {
+async function killGame(url: string) {
   console.log("kill game");
-  await runADBCommand(adbOptions, "shell am kill com.farlightgames.samo.gp.vn");
+  await runADBCommand(adbOptions, `shell am kill ${url}`);
   await sleepRandom(1000);
-  await runADBCommand(
-    adbOptions,
-    "shell am force-stop com.farlightgames.samo.gp.vn"
-  );
+  await runADBCommand(adbOptions, `shell am force-stop ${url}`);
 }
 
 async function scrollDown(startx: number, starty: number) {
@@ -174,7 +180,6 @@ async function waitForSubImage(imgPath: string, timeout: number) {
 let sendAlertsTimeout: ReturnType<typeof setTimeout> | null = null;
 let sendMessageBatch: string[] = [];
 async function sendDiscordMessage(message: string, err?: unknown) {
-
   const payload = {
     // the username to be displayed
     username: "bot-alerts",
@@ -196,19 +201,23 @@ async function sendDiscordMessage(message: string, err?: unknown) {
       : {}),
   };
   const res = await fetch(
-    "https://discord.com/api/webhooks/1379036866489356378/dqfrzRFMDNuMY2FuQwZjJFHxPTE8EbkY_vWHTZ-wZhHsgSiiv1rFG1vZLP3y8-tCjnLQ",
+    "https://discord.com/api/webhooks/1387655225472450600/NHmWc0xJ8olpGOMfwliw2wxnutcCH_6Luq4j3TbAfYCXAVTpznfxbroWAOgxZQwfI545",
     {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-    },
+    }
   ).catch((err) => {
     console.error("Error sending alert", err);
   });
 }
-async function sendAlerts(message: string, account: string, err?: unknown) {
+export async function sendAlerts(
+  message: string,
+  account: string,
+  err?: unknown
+) {
   if (err) {
     console.error(`[${account}] ${message}`, err);
   } else {
@@ -240,11 +249,11 @@ function waitForAvatarImage() {
   return waitForSubImage(AVATAR_IMAGE_PATH, 60000);
 }
 
-async function startGame() {
+async function startGame(url: string) {
   sendAlerts("start game", "app");
   await runADBCommand(
     adbOptions,
-    "shell am start -n com.farlightgames.samo.gp.vn/com.harry.engine.MainActivity"
+    `shell am start -n ${url}/com.harry.engine.MainActivity`
   );
   await sleepRandom(DEFAULT_WAIT_TIME);
   await waitForAvatarImage();
@@ -271,12 +280,41 @@ export interface Account {
   };
   nextAutoGatherTime: string;
   troops: Troop[];
+  type: string;
 }
 
-const accounts = JSON.parse(readFileSync("./accounts.json", "utf-8")) as Record<
-  string,
-  Account
->;
+// const accounts = JSON.parse(readFileSync(ACCOUNT_FILE_PATH, "utf-8")) as Record<
+//   string,
+//   Account
+// >;
+let accounts: Record<string, Account> = {};
+
+async function initializeAccounts() {
+  try {
+    console.log("Fetching accounts from Google Sheets...");
+    const sheetData = await fetchAccountsFromGoogleSheets();
+    sendAlerts("Fetching accounts from Google Sheets completed", "app");
+    if (!sheetData || sheetData.length === 0) {
+      sendAlerts("Warning: No data returned from Google Sheets.", "app");
+      throw new Error("No data returned from Google Sheets.");
+    }
+    accounts = convertSheetDataToAccounts(sheetData);
+    console.log(
+      "Successfully converted sheet data to accounts object:",
+      accounts
+    );
+  } catch (error) {
+    console.error(
+      "Could not initialize accounts from Google Sheets. Falling back to local file.",
+      error
+    );
+    sendAlerts(
+      "Could not initialize accounts from Google Sheets. Falling back to local file.",
+      "app",
+      error
+    );
+  }
+}
 
 async function clickTopLeftAvatar(account: string) {
   sendAlerts("clickTopLeftAvatar", account);
@@ -341,6 +379,7 @@ async function guessCurrentAccountFromScreen() {
     width: 500,
     height: 60,
   });
+  console.log("guessCurrentAccountFromScreen texts", texts);
   for (const t of texts) {
     for (const key in accounts) {
       if (t.text.includes(key)) {
@@ -440,16 +479,22 @@ async function switchEmail(account: string, targetEmail: string) {
 async function changeAccount(account: string, currentAccount: string) {
   sendAlerts("switchAccount " + account, currentAccount);
   const currentEmail = accounts[currentAccount]?.email;
-  const targetEmail = accounts[account].email;
+  const targetEmail = accounts[account]?.email;
   const targetID = accounts[account].id;
   sendAlerts(
     "currentEmail=" + currentEmail + " targetEmail=" + targetEmail,
     currentAccount
   );
+  let currentAccount1 = await guessCurrentAccountFromScreen();
+  if (accounts[account]?.type !== accounts[currentAccount]?.type && currentAccount1 === account) {
+    sendEscKey(currentAccount);
+    return;
+  }
   let needSwitchCharacter = account !== currentAccount;
   if (currentEmail !== targetEmail) {
     await switchEmail(currentAccount, targetID);
-    const currentAccount1 = await guessCurrentAccountFromScreen();
+    currentAccount1 = await guessCurrentAccountFromScreen();
+    sleepRandom(DEFAULT_WAIT_TIME);
     sendAlerts("currentAccount1=" + currentAccount1, currentAccount);
     needSwitchCharacter = account !== currentAccount1;
   }
@@ -487,14 +532,14 @@ async function changeAccount(account: string, currentAccount: string) {
   }
 }
 
-async function persistAccountSettings(account: string) {
-  await fsPromises.writeFile(
-    "./accounts.json",
-    JSON.stringify(accounts, null, 2),
-    "utf-8"
-  );
-  sendAlerts("Account settings saved", account);
-}
+// async function persistAccountSettings(account: string) {
+//   await fsPromises.writeFile(
+//     ACCOUNT_FILE_PATH,
+//     JSON.stringify(accounts, null, 2),
+//     "utf-8"
+//   );
+//   sendAlerts("Account settings saved", account);
+// }
 
 async function gatherProdRss(account: string) {
   sendAlerts("gatherProdRss", account);
@@ -666,10 +711,15 @@ async function clickButtonIfFound(imgPath: string) {
   }
 }
 async function doFarm(account: string, currentAccount: string) {
+  console.log('farm account', account);
+  console.log('currentAccount', currentAccount);
+  if (accounts[account].type !== accounts[currentAccount].type) {
+    await switchApp(account);
+  }
   await changeAccount(account, currentAccount);
   await sleepRandom(DEFAULT_WAIT_TIME);
   const accountSettings = accounts[account];
-  let minGatheringTime = new Date().getTime() + 2 * 60 * 60 * 1000;
+  let minGatheringTime = new Date().getTime() + 1 * 60 * 60 * 1000;
 
   accountSettings.nextCheckTime = new Date(minGatheringTime).toISOString();
   const rssTexts = await ocrScreenArea(adbOptions, {
@@ -678,7 +728,7 @@ async function doFarm(account: string, currentAccount: string) {
     width: 600,
     height: 40,
   });
-  accountSettings.stats = {
+  const rssObj = {
     gold: rssTexts[0]?.text || "",
     wood: rssTexts[1]?.text || "",
     ore: rssTexts[2]?.text || "",
@@ -686,7 +736,11 @@ async function doFarm(account: string, currentAccount: string) {
     gems: rssTexts[4]?.text || "",
   };
 
-  await persistAccountSettings(account);
+  // await persistAccountSettings(account);
+  await updateAccountInSheet(account, {
+    stats: JSON.stringify(rssObj),
+    nextCheckTime: accountSettings.nextCheckTime,
+  });
   if (accountSettings.nextAutoGatherTime < new Date().toISOString()) {
     if (accountSettings.gatherProdRss) await gatherProdRss(account);
     if (accountSettings.gatherClanRss) await gatherClanRss(account);
@@ -694,7 +748,11 @@ async function doFarm(account: string, currentAccount: string) {
     accountSettings.nextAutoGatherTime = new Date(
       new Date().getTime() + 6 * 60 * 60 * 1000
     ).toISOString();
-    await persistAccountSettings(account);
+    // await persistAccountSettings(account);
+    updateAccountInSheet(account, {
+      stats: JSON.stringify(rssObj),
+      nextCheckTime: accountSettings.nextCheckTime,
+    });
   }
   sendAlerts("Click open queue list detail", account);
   await touchScreen(adbOptions, 1254, 290);
@@ -743,22 +801,48 @@ async function doFarm(account: string, currentAccount: string) {
     Math.max(minGatheringTime, Date.now() + 3600 * 1000)
   ).toISOString();
   sendAlerts("nextCheckTime=" + accountSettings.nextCheckTime, account);
-  await persistAccountSettings(account);
+  // await persistAccountSettings(account);
+  updateAccountInSheet(account, {
+    nextCheckTime: accountSettings.nextCheckTime,
+  });
   await clickButtonIfFound("./imgs/btn_sickle.png");
   await clickButtonIfFound("./imgs/btn_help.png");
   await clickTopLeftAvatar(account);
-  await sleepRandom(DEFAULT_WAIT_TIME)
+  await sleepRandom(DEFAULT_WAIT_TIME);
   sendAlerts("done farm", account);
 }
 
+async function switchApp(account: string) {
+  const app = accounts[account].type;
+  const nameApp = currentApp === URL_APP ? "global" : "funtab";
+  console.log("switch app from " + nameApp + " to " + app);
+  sendAlerts("switch app from " + nameApp + " to " + app, account);
+  try {
+    await killGame(URL_APP);
+    await killGame(URL_APP_VN);
+    currentApp = appObj[app];
+  } catch (e) {
+    sendAlerts("kill game error", "app", e);
+  }
+  await sleepRandom(DEFAULT_WAIT_TIME);
+  console.log("start game");
+  await startGame(currentApp);
+  await clickTopLeftAvatar(account);
+  await sleep(DEFAULT_WAIT_TIME);
+}
+
+var accountToRun:string[] = []
+var currentAccount: string = "";
+
 async function main() {
+  await initializeAccounts();
   const isBotChecking = await fsPromises.exists("./isBotChecking.lock");
   if (isBotChecking) {
     await sendAlerts("isBotChecking.lock exists, exit", "app");
     await flushAlerts();
     process.exit(0);
   }
-  const accountToRun = Object.keys(accounts).filter((key) => {
+  accountToRun = Object.keys(accounts).filter((key) => {
     return (
       accounts[key].enable &&
       accounts[key].nextCheckTime < new Date().toISOString()
@@ -772,18 +856,21 @@ async function main() {
   await startApp();
   sendAlerts("accountToRun" + JSON.stringify(accountToRun), "app");
   try {
-    await killGame();
+    await killGame(URL_APP);
+    await killGame(URL_APP_VN);
   } catch (e) {
     sendAlerts("kill game error", "app", e);
   }
   await sleepRandom(DEFAULT_WAIT_TIME);
   console.log("start game");
-  await startGame();
+  const accType = appObj[accounts[accountToRun[accountToRun.length - 1]].type]
+  currentApp = accType;
+  await startGame(accType);
 
   await clickTopLeftAvatar("app");
   await sleepRandom(DEFAULT_WAIT_TIME);
 
-  let currentAccount = await guessCurrentAccountFromScreen();
+  currentAccount = await guessCurrentAccountFromScreen();
   sendAlerts("currentAccount=" + currentAccount, "app");
   let accountToFarm = "";
   if (currentAccount === "" || !accountToRun.includes(currentAccount)) {
@@ -799,6 +886,8 @@ async function main() {
   while (accountToRun.length > 0) {
     sendAlerts("accountToRun" + JSON.stringify(accountToRun), "app");
     const nextAccount = accountToRun.pop()!;
+    currentAccount = await guessCurrentAccountFromScreen();
+    sleepRandom(DEFAULT_WAIT_TIME);
     await doFarm(nextAccount, currentAccount);
     if (!currentAccount) {
       currentAccount = nextAccount;
@@ -833,25 +922,19 @@ async function main() {
   const nextAccount = availableAccounts[0][0];
 
   if (nextAccount && nextAccount !== currentAccount) {
+    console.log("vao case nextAccount roiiiii");
     sendAlerts("nextAccount=" + nextAccount, "app");
     await changeAccount(nextAccount, currentAccount);
     await sleepRandom(DEFAULT_WAIT_TIME);
   }
 }
 
-const to = setTimeout(async () => {
-  sendAlerts("app timeout", "app");
-  await killApp();
-  process.exit(0);
-},640 * 60 * 1000);
-
 // run the script
 await main();
 await runADBCommand(adbOptions, "shell input keyevent KEYCODE_HOME");
 await sleepRandom(DEFAULT_WAIT_TIME);
-await killGame();
+await killGame(currentApp);
 await sleepRandom(DEFAULT_WAIT_TIME);
 await killApp();
-clearTimeout(to);
 await flushAlerts();
 process.exit(0);
