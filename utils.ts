@@ -86,6 +86,7 @@ export async function getScreenshot(adbOptions: string) {
       .toBuffer({ resolveWithObject: true });
     return imgData;
   } catch (e) {
+    await killApp();
     console.error(e);
   } finally {
     if (fs.existsSync(tmpFile)) {
